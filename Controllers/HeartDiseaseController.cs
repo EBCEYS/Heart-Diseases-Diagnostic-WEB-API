@@ -69,8 +69,8 @@ namespace Get_Requests_From_Client_For_Project_Test.Controllers
         /// </example></param>
         /// <returns>The action response.</returns>
         [ProducesResponseType(typeof(object), 200)]
-        [HttpPost("/")]
-        public ActionResult Post([Required][FromQuery] AlgorithmsTypes algorithm, [Required][FromQuery] DataSetTypes dataSetType, [FromBody] JsonDocument data)
+        [HttpPost("/diagnose")]
+        public ActionResult Diagnose([Required][FromQuery] AlgorithmsTypes algorithm, [Required][FromQuery] DataSetTypes dataSetType, [FromBody] JsonDocument data)
         {
             logger.Info("public ActionResult<ActionResponse> Get([Required][FromQuery] string {@algorithm}, [Required][FromBody] ClevelandDataSet {@dataSet})", algorithm, data.RootElement.ToString());
             string dataSet = data.RootElement.ToString();
@@ -89,7 +89,7 @@ namespace Get_Requests_From_Client_For_Project_Test.Controllers
                 {
                     case DataSetTypes.Cleveland:
                         ClevelandDataSet clevelandDataSet = JsonSerializer.Deserialize<ClevelandDataSet>(dataSet, new() { WriteIndented = false, AllowTrailingCommas = true, PropertyNameCaseInsensitive = true });
-                        response = _server.RequestToCalc<ActionResponse, ClevelandDataSet>(dataSetType.ToString(), algorithm.ToString(), clevelandDataSet);
+                        response = _server.RequestToCalc<ActionResponse, ClevelandDataSet>(algorithm.ToString(), clevelandDataSet);
                         if (response != null)
                         {
                             response.RequestId = requestId;

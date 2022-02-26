@@ -8,7 +8,7 @@ namespace Get_Requests_From_Client_For_Project_Test.DataSetsClasses
     /// <summary>
     /// Template for element from Cleveland dataset.
     /// </summary>
-    public class ClevelandDataSet
+    public class ClevelandDataSet : DataSetBase
     {
         /// <summary>
         /// Gets or sets the age.
@@ -31,10 +31,9 @@ namespace Get_Requests_From_Client_For_Project_Test.DataSetsClasses
         /// The maximum heart rate.
         /// </value>
         public long MaxHeartRate { get; set; }
-
-        internal object ToObject()
+        public ClevelandDataSet()
         {
-            return new { Age, Sex, MaxHeartRate };
+            SetAlghorithmType(DataSetTypes.Cleveland);
         }
     }
 }

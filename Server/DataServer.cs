@@ -63,13 +63,13 @@ namespace Get_Requests_From_Client_For_Project_Test
         /// <param name="algorithm">The AI algorithm.</param>
         /// <param name="data">The data.</param>
         /// <returns>ActionResultReponse</returns>
-        public T RequestToCalc<T, D>(string dataSetType, string algorithm, D data)
+        public T RequestToCalc<T, D>(string algorithm, D data)
         {
             logger.Info("public async Task<ActionResponse> RequestToCalc(string {method}, object {@data}, JsonSerializerOptions {@jsonSerializerOptions})", dataSetType, data);
             logger.Debug("Current list of allowed machines employment: {@_listAllowedMachinesEmployment}", _listAllowedMachinesEmployment);
             string leastBusyMachineIp = _listAllowedMachinesEmployment.GetLeastBusyMachine().Key;
             _listAllowedMachinesEmployment[leastBusyMachineIp]++;
-            T answer = PostRPCRequest<T, D>(leastBusyMachineIp, $"{dataSetType}_{algorithm}", data).Result;
+            T answer = PostRPCRequest<T, D>(leastBusyMachineIp, algorithm, data).Result;
             _listAllowedMachinesEmployment[leastBusyMachineIp]--;
             return answer;
         }
