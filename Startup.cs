@@ -58,7 +58,7 @@ namespace Get_Requests_From_Client_For_Project_Test
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Get_Requests_From_Client_For_Project_Test", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Heart Diseases Diagnostic WEB API", Version = "v1" });
                 string xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
             });
@@ -75,7 +75,7 @@ namespace Get_Requests_From_Client_For_Project_Test
             app.UseStaticFiles();
             app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
             app.UseSwagger();
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Get_Requests_From_Client_For_Project_Test v1"));
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Heart Diseases Diagnostic WEB API v1"));
 
             if (env.IsDevelopment())
             {
