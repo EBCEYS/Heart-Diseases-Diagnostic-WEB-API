@@ -1,7 +1,8 @@
 # Heart-Diseases-Diagnostic-WEB-API
 This is a WEB API used to diagnose cardiovascular diseases using AI algorithms.
 
-Описание конфигурационного файла:
+## Описание конфигурационного файла:
+```json
 {
   "Logging": { //логирование
     "LogLevel": {
