@@ -1,0 +1,284 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Get_Requests_From_Client_For_Project_Test</name>
+    </assembly>
+    <members>
+        <member name="T:Get_Requests_From_Client_For_Project_Test.AdditionalMethods.AdditionalCommands">
+            <summary>
+            The additional comands.
+            </summary>
+        </member>
+        <member name="M:Get_Requests_From_Client_For_Project_Test.AdditionalMethods.AdditionalCommands.GetLeastBusyMachine(System.Collections.Concurrent.ConcurrentDictionary{System.String,System.Int64})">
+            <summary>
+            Get least busy local machine from dictionary.
+            </summary>
+            <param name="val">The val.</param>
+            <returns>The least busy local machine.</returns>
+        </member>
+        <member name="T:Get_Requests_From_Client_For_Project_Test.Controllers.HeartDiseaseController">
+            <summary>
+            The heart desease controller.
+            </summary>
+        </member>
+        <member name="M:Get_Requests_From_Client_For_Project_Test.Controllers.HeartDiseaseController.#ctor(NLog.Logger,Get_Requests_From_Client_For_Project_Test.DataServer,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            The heart desease controller constructor.
+            </summary>
+            <param name="logger">The logger.</param>
+            <param name="dataServer">The data server.</param>
+            <param name="config">The configuration.</param>
+        </member>
+        <member name="M:Get_Requests_From_Client_For_Project_Test.Controllers.HeartDiseaseController.Get(System.String,Get_Requests_From_Client_For_Project_Test.DataSetsClasses.DataSetTypes,System.Text.Json.JsonDocument)">
+            <summary>
+            The main method. Uses to diagnose data by definite algorithm.
+            </summary>
+            <param name="algorithm">The algorithm.</param>
+            <param name="dataSetType">The data set type.</param>
+            <param name="data">The values set by dataset example.
+            <example>
+            ClevelandDataSet:
+            \n{
+            \n"RequestId":"6c6135c2-6c5c-460d-81c8-35316d0144dd",
+            \n"Age":50,
+            \n"Sex":true,
+            \n"MaxHeartRate":140
+            \n}
+            </example></param>
+            <returns>The action response.</returns>
+        </member>
+        <member name="M:Get_Requests_From_Client_For_Project_Test.Controllers.HeartDiseaseController.Ping">
+            <summary>
+            The ping.
+            </summary>
+            <returns>Pong</returns>
+        </member>
+        <member name="T:Get_Requests_From_Client_For_Project_Test.DataSetsClasses.ClevelandDataSet">
+            <summary>
+            Template for element from Cleveland dataset.
+            </summary>
+        </member>
+        <member name="P:Get_Requests_From_Client_For_Project_Test.DataSetsClasses.ClevelandDataSet.Age">
+            <summary>
+            Gets or sets the age.
+            </summary>
+            <value>
+            The age.
+            </value>
+        </member>
+        <member name="P:Get_Requests_From_Client_For_Project_Test.DataSetsClasses.ClevelandDataSet.Sex">
+            <summary>
+            Gets or sets the sex.
+            </summary>
+            <value>
+            The sex. If male <c>true</c>; otherwise <c>false</c>.
+            </value>
+        </member>
+        <member name="P:Get_Requests_From_Client_For_Project_Test.DataSetsClasses.ClevelandDataSet.MaxHeartRate">
+            <summary>
+            Gets or sets the maximum heart rate.
+            </summary>
+            <value>
+            The maximum heart rate.
+            </value>
+        </member>
+        <member name="T:Get_Requests_From_Client_For_Project_Test.DataSetsClasses.DataSetTypes">
+            <summary>
+            The data set types.
+            </summary>
+        </member>
+        <member name="F:Get_Requests_From_Client_For_Project_Test.DataSetsClasses.DataSetTypes.Cleveland">
+            <summary>
+            The cleveland data set.
+            </summary>
+        </member>
+        <member name="T:Get_Requests_From_Client_For_Project_Test.Program">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Get_Requests_From_Client_For_Project_Test.Program.Main(System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:Get_Requests_From_Client_For_Project_Test.Program.CreateHostBuilder(System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Get_Requests_From_Client_For_Project_Test.ActionResponse">
+            <summary>
+            Method response.
+            </summary>
+        </member>
+        <member name="F:Get_Requests_From_Client_For_Project_Test.ActionResponse.Answer">
+            <summary>
+            Gets or sets the answer.
+            </summary>
+            <value>
+            The answer.
+            </value>
+        </member>
+        <member name="P:Get_Requests_From_Client_For_Project_Test.ActionResponse.RequestId">
+            <summary>
+            Gets or sets the request id.
+            </summary>
+            <value>
+            The request id.
+            </value>
+        </member>
+        <member name="F:Get_Requests_From_Client_For_Project_Test.ActionResponse.Value">
+            <summary>
+            Gets or sets the value. If answer is not <c>OK</c>, value is null; otherwise <c>double</c>.
+            </summary>
+            <value>
+            The value.
+            </value>
+        </member>
+        <member name="M:Get_Requests_From_Client_For_Project_Test.ActionResponse.ToObject">
+            <summary>
+            Converts this to object.
+            </summary>
+            <returns>The object.</returns>
+        </member>
+        <member name="T:Get_Requests_From_Client_For_Project_Test.Result">
+            <summary>
+            Answer result.
+            </summary>
+        </member>
+        <member name="F:Get_Requests_From_Client_For_Project_Test.Result.OK">
+            <summary>
+            The OK.
+            </summary>
+        </member>
+        <member name="F:Get_Requests_From_Client_For_Project_Test.Result.ERROR">
+            <summary>
+            The fatal error.
+            </summary>
+        </member>
+        <member name="F:Get_Requests_From_Client_For_Project_Test.Result.ERROR_WRONG_ALGORITHM">
+            <summary>
+            The error cause by wrong algorithm
+            </summary>
+        </member>
+        <member name="F:Get_Requests_From_Client_For_Project_Test.Result.ERROR_WRONG_DATASET">
+            <summary>
+            The error cause by wrong dataset.
+            </summary>
+        </member>
+        <member name="F:Get_Requests_From_Client_For_Project_Test.Result.ERROR_WRONG_REQUEST_ID">
+            <summary>
+            The error cause by wrong requestorid.
+            </summary>
+        </member>
+        <member name="T:Get_Requests_From_Client_For_Project_Test.DataServer">
+            <summary>
+            The data server.
+            </summary>
+        </member>
+        <member name="M:Get_Requests_From_Client_For_Project_Test.DataServer.#ctor(NLog.Logger,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            The data server constructor.
+            </summary>
+            <param name="logger">The logger.</param>
+            <param name="config">The configuration.</param>
+        </member>
+        <member name="M:Get_Requests_From_Client_For_Project_Test.DataServer.RequestToCalc``2(System.String,``1)">
+            <summary>
+            Method uses to post request to least busy local machine.
+            </summary>
+            <typeparam name="T">The response data type.</typeparam>
+            <typeparam name="D">The request data type.</typeparam>
+            <param name="method">The method.</param>
+            <param name="data">The data.</param>
+            <returns>ActionResultReponse</returns>
+        </member>
+        <member name="M:Get_Requests_From_Client_For_Project_Test.DataServer.PostRPCRequest``2(System.String,System.String,``1)">
+            <summary>
+            Method uses to post RPC request to local machine.
+            </summary>
+            <typeparam name="T">The response data type.</typeparam>
+            <typeparam name="D">The data type.</typeparam>
+            <param name="url">The url.</param>
+            <param name="method">The method.</param>
+            <param name="data">The data.</param>
+            <returns>Deserialized RPC response.</returns>
+        </member>
+        <member name="M:Get_Requests_From_Client_For_Project_Test.DataServer.UpdateListAllowedMachines(System.Object)">
+            <summary>
+            Method uses to update list of allowed local machines.
+            </summary>
+        </member>
+        <member name="M:Get_Requests_From_Client_For_Project_Test.DataServer.UpdateAllowedIps(System.Collections.Generic.List{System.String})">
+            <summary>
+            Method uses to update list of allowed ips of local machines.
+            </summary>
+            <param name="newIps">The new ips. Uses on hard set ips.</param>
+        </member>
+        <member name="M:Get_Requests_From_Client_For_Project_Test.DataServer.Ping(System.String)">
+            <summary>
+            Usses to get ping from local machine.
+            </summary>
+            <param name="ip">The ip.</param>
+            <returns>exec - <c>true</c> if executed; otherwise <c>false</c>| <c>true</c> if http response status code is 200; otherwise <c> false</c></returns>
+        </member>
+        <member name="M:Get_Requests_From_Client_For_Project_Test.DataServer.HttpRequest(System.String,System.String,Get_Requests_From_Client_For_Project_Test.HttpRequestType,System.String)">
+            <summary>
+            Method uses to post http requests.
+            </summary>
+            <param name="url">The url.</param>
+            <param name="method">The method.</param>
+            <param name="json">The json to body. Uses only with post request type.</param>
+            <param name="requestType">The request type.</param>
+            <returns>exec - <c>true</c> if executed; otherwise <c>false</c>| <c>true</c> if http response has 200 status code; otherwise <c> false</c></returns>
+        </member>
+        <member name="T:Get_Requests_From_Client_For_Project_Test.HttpRequestType">
+            <summary>
+            The http request type.
+            </summary>
+        </member>
+        <member name="F:Get_Requests_From_Client_For_Project_Test.HttpRequestType.Get">
+            <summary>
+            To get http request.
+            </summary>
+        </member>
+        <member name="F:Get_Requests_From_Client_For_Project_Test.HttpRequestType.Post">
+            <summary>
+            To post http request.
+            </summary>
+        </member>
+        <member name="T:Get_Requests_From_Client_For_Project_Test.Startup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Get_Requests_From_Client_For_Project_Test.Startup.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            
+            </summary>
+            <param name="configuration"></param>
+        </member>
+        <member name="P:Get_Requests_From_Client_For_Project_Test.Startup.Configuration">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Get_Requests_From_Client_For_Project_Test.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            
+            </summary>
+            <param name="services"></param>
+        </member>
+        <member name="M:Get_Requests_From_Client_For_Project_Test.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IWebHostEnvironment)">
+            <summary>
+            
+            </summary>
+            <param name="app"></param>
+            <param name="env"></param>
+        </member>
+    </members>
+</doc>
