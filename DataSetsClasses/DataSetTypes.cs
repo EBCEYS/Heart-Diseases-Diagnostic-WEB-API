@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Get_Requests_From_Client_For_Project_Test.DataSetsClasses
+﻿namespace Get_Requests_From_Client_For_Project_Test.DataSetsClasses
 {
     /// <summary>
     /// The data set types.

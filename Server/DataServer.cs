@@ -59,13 +59,12 @@ namespace Get_Requests_From_Client_For_Project_Test
         /// </summary>
         /// <typeparam name="T">The response data type.</typeparam>
         /// <typeparam name="D">The request data type.</typeparam>
-        /// <param name="dataSetType">The data set type.</param>
         /// <param name="algorithm">The AI algorithm.</param>
         /// <param name="data">The data.</param>
         /// <returns>ActionResultReponse</returns>
         public T RequestToCalc<T, D>(string algorithm, D data)
         {
-            logger.Info("public async Task<ActionResponse> RequestToCalc(string {method}, object {@data}, JsonSerializerOptions {@jsonSerializerOptions})", dataSetType, data);
+            logger.Info("T RequestToCalc<T, D>(string {algorithm}, object {@data}", algorithm, data);
             logger.Debug("Current list of allowed machines employment: {@_listAllowedMachinesEmployment}", _listAllowedMachinesEmployment);
             string leastBusyMachineIp = _listAllowedMachinesEmployment.GetLeastBusyMachine().Key;
             _listAllowedMachinesEmployment[leastBusyMachineIp]++;

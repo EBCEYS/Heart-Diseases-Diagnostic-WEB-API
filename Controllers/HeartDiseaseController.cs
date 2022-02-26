@@ -5,7 +5,6 @@ using NLog;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -57,25 +56,17 @@ namespace Get_Requests_From_Client_For_Project_Test.Controllers
         /// </summary>
         /// <param name="algorithm">The AI algorithm.</param>
         /// <param name="dataSetType">The data set type.</param>
-        /// <param name="data">The values set by dataset example.
-        /// <example>
-        /// ClevelandDataSet:
-        /// {
-        /// "RequestId":"6c6135c2-6c5c-460d-81c8-35316d0144dd",
-        /// "Age":50,
-        /// "Sex":true,
-        /// "MaxHeartRate":140
-        /// }
-        /// </example></param>
+        /// <param name="data">The values set by dataset example.</param>
+        /// <param name="requestId">The request id. <example>"6c6135c2-6c5c-460d-81c8-35316d0144dd"</example></param>
         /// <returns>The action response.</returns>
         [ProducesResponseType(typeof(object), 200)]
         [HttpPost("/diagnose")]
-        public ActionResult Diagnose([Required][FromQuery] AlgorithmsTypes algorithm, [Required][FromQuery] DataSetTypes dataSetType, [FromBody] JsonDocument data)
+        public ActionResult Diagnose([Required][FromQuery] AlgorithmsTypes algorithm, [Required][FromQuery] DataSetTypes dataSetType, [FromBody] JsonDocument data, [Required][FromHeader] string requestId)
         {
             logger.Info("public ActionResult<ActionResponse> Get([Required][FromQuery] string {@algorithm}, [Required][FromBody] ClevelandDataSet {@dataSet})", algorithm, data.RootElement.ToString());
             string dataSet = data.RootElement.ToString();
             //TODO: сделать проверку на соответствие формату или вообще убрать RequestId
-            string requestId = data.RootElement.GetProperty("RequestId").ToString().Length == _RequestIdLength ? data.RootElement.GetProperty("RequestId").ToString() : null;
+            requestId = requestId.Length == _RequestIdLength ? requestId : null;
             ActionResponse response = null;
             if (requestId == null)
             {
@@ -123,6 +114,35 @@ namespace Get_Requests_From_Client_For_Project_Test.Controllers
         {
             logger.Debug("public ActionResult Ping()");
             return Ok("Pong");
+        }
+
+        /// <summary>
+        /// Get cleveland data set example.
+        /// </summary>
+        /// <returns>The cleveland data set example.</returns>
+        [ProducesResponseType(typeof(ClevelandDataSet), 200)]
+        [HttpGet("/cleveland-example")]
+        public ActionResult<ClevelandDataSet> GetClevelandExample()
+        {
+            logger.Debug("public ActionResult GetClevelandExample()");
+            ClevelandDataSet example = new()
+            {
+                Age = 63,
+                Sex = true,
+                ChestPainType = 3,
+                RestingBloodPressure = 145,
+                SerumCholestoral = 233,
+                FastingBloodSugar = false,
+                MaximumHeartRateAchieved = 150,
+                ExerciseInducedAngina = false,
+                STDepression = 2.3,
+                STSlope = 0,
+                NumberOfMajorvessels = 0,
+                Thalassemia = 1
+            };
+            example.SetAlghorithmType(null);
+
+            return example;
         }
     }
 }
