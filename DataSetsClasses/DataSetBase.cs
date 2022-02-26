@@ -11,19 +11,19 @@
         /// <value>
         /// The dataset type.
         /// </value>
-        public DataSetTypes DataSetType
+        public DataSetTypes? DataSetType
         {
             get
             {
                 return dataSetType;
             }
         }
-        private DataSetTypes dataSetType;
+        private DataSetTypes? dataSetType;
         /// <summary>
         /// Method uses to set dataset type.
         /// </summary>
         /// <param name="dataSetType">The dataset type.</param>
-        internal void SetAlghorithmType(DataSetTypes dataSetType)
+        internal void SetAlghorithmType(DataSetTypes? dataSetType)
         {
             this.dataSetType = dataSetType;
         }
