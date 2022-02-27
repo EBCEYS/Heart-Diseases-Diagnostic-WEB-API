@@ -17,4 +17,11 @@ This is a WEB API used to diagnose cardiovascular diseases using AI algorithms.
     "127.0.0.1:5000" // пример
   ]
 }
+```
+## Используемые датасеты:
+1) https://www.kaggle.com/fedesoriano/heart-failure-prediction
+2) https://www.kaggle.com/andrewmvd/heart-failure-clinical-data
+3) https://www.kaggle.com/sulianova/cardiovascular-disease-dataset
+4) https://www.kaggle.com/yassinehamdaoui1/cardiovascular-disease
+5) https://www.kaggle.com/ronitf/heart-disease-uci
 
