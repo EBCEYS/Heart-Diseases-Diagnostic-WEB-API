@@ -16,7 +16,7 @@ namespace Get_Requests_From_Client_For_Project_Test
         /// <value>
         /// The answer.
         /// </value>
-        public Result Answer;
+        public Result Answer { get; set; }
         /// <summary>
         /// Gets or sets the request id.
         /// </summary>
@@ -30,7 +30,7 @@ namespace Get_Requests_From_Client_For_Project_Test
         /// <value>
         /// The value.
         /// </value>
-        public double? Value;
+        public double? Value { get; set; }
         /// <summary>
         /// Converts this to object.
         /// </summary>

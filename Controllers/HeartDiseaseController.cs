@@ -59,15 +59,15 @@ namespace Get_Requests_From_Client_For_Project_Test.Controllers
         /// <param name="data">The values set by dataset example.</param>
         /// <param name="requestId">The request id. <example>"6c6135c2-6c5c-460d-81c8-35316d0144dd"</example></param>
         /// <returns>The action response.</returns>
-        [ProducesResponseType(typeof(object), 200)]
+        [ProducesResponseType(typeof(ActionResponse), 200)]
         [HttpPost("/diagnose")]
-        public ActionResult Diagnose([Required][FromQuery] AlgorithmsTypes algorithm, [Required][FromQuery] DataSetTypes dataSetType, [FromBody] JsonDocument data, [Required][FromHeader] string requestId)
+        public ActionResult<ActionResponse> Diagnose([Required][FromQuery] AlgorithmsTypes algorithm, [Required][FromQuery] DataSetTypes dataSetType, [FromBody] JsonDocument data, [Required][FromHeader] string requestId)
         {
             logger.Info("public ActionResult<ActionResponse> Get([Required][FromQuery] string {@algorithm}, [Required][FromBody] ClevelandDataSet {@dataSet})", algorithm, data.RootElement.ToString());
             string dataSet = data.RootElement.ToString();
             //TODO: сделать проверку на соответствие формату или вообще убрать RequestId
             requestId = requestId.Length == _RequestIdLength ? requestId : null;
-            ActionResponse response = null;
+            ActionResponse response;
             if (requestId == null)
             {
                 response = new() { Answer = Result.ERROR_WRONG_REQUEST_ID };
@@ -101,7 +101,7 @@ namespace Get_Requests_From_Client_For_Project_Test.Controllers
                 response = new() { Answer = Result.ERROR, RequestId = requestId, Value = null };
             }
             logger.Info("Response is {@response}", response);
-            return Ok(response.ToObject());
+            return Ok(response);
         }
 
         /// <summary>
@@ -141,7 +141,7 @@ namespace Get_Requests_From_Client_For_Project_Test.Controllers
                 Thalassemia = 1
             };
             example.SetAlghorithmType(null);
-
+            logger.Info("Result is {@example}", example);
             return example;
         }
     }

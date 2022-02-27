@@ -79,17 +79,17 @@ namespace Get_Requests_From_Client_For_Project_Test
         /// <typeparam name="T">The response data type.</typeparam>
         /// <typeparam name="D">The data type.</typeparam>
         /// <param name="url">The url.</param>
-        /// <param name="method">The method.</param>
+        /// <param name="algorithm">The algorithm.</param>
         /// <param name="data">The data.</param>
         /// <returns>Deserialized RPC response.</returns>
-        private async Task<T> PostRPCRequest<T, D>(string url, string method, D data)
+        private async Task<T> PostRPCRequest<T, D>(string url, string algorithm, D data)
         {
             try
             {
-                logger.Info("private async Task<T> PostRPCRequest<T>(string {url}, string {method}, object {@data})", url, method, data);
+                logger.Info("private async Task<T> PostRPCRequest<T, D>(string {url}, string {algorithm}, object {@data})", url, algorithm, data);
                 UriBuilder builder = new(url);
                 RpcClient client = new(builder.Uri);
-                RpcRequest request = new(Guid.NewGuid().ToString(), method, RpcParameters.From(data));
+                RpcRequest request = new(Guid.NewGuid().ToString(), algorithm, RpcParameters.From(data));
                 logger.Info("Rpc request to url {url} with params: {@params}", client.BaseUrl, request);
                 RpcResponse response = await client.SendRequestAsync(request, null, typeof(T));
                 logger.Info("Answer is {@response}", response);
@@ -145,7 +145,7 @@ namespace Get_Requests_From_Client_For_Project_Test
             else
             {
                 _allowedIPs = new();
-                logger.Debug("Current list of allowed ips of local machines: {@allowedIps}", _allowedIPs);
+                logger.Info("Current list of allowed ips of local machines: {@allowedIps}", _allowedIPs);
                 foreach (IConfigurationSection val in config.GetSection("AllowedIPs").GetChildren().ToArray())
                 {
                     _allowedIPs.Add(val.Value);
