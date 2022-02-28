@@ -25,7 +25,7 @@ namespace Get_Requests_From_Client_For_Project_Test
         /// </value>
         public string RequestId { get; set; }
         /// <summary>
-        /// Gets or sets the value. If answer is not <c>OK</c>, value is null; otherwise <c>double</c>.
+        /// Gets or sets the value. If answer is not <c>OK</c>, value is <c>null</c>; otherwise <c>double</c>.
         /// </summary>
         /// <value>
         /// The value.
