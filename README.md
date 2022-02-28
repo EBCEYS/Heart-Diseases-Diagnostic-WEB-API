@@ -18,6 +18,39 @@ This is a WEB API used to diagnose cardiovascular diseases using AI algorithms.
   ]
 }
 ```
+
+## HTTP методы:
+1) /diagnose: Основной метод. Служит для самого диагностирования. На вход принимает [Required][FromQuery] AlgorithmsTypes algorithm, [Required][FromQuery] DataSetTypes dataSetType, [FromBody] JsonDocument data, [Required][FromHeader] string requestId.
+    Структура data должна совпадать со структурой в примерах.
+    В ответ выдает ActionResponse:
+```json
+{
+  "answer": "OK",
+  "requestId": "string",
+  "value": 0
+}
+```
+2) /cleveland-example: Отвечает примером класса ClevelandDataSet.На вход ничего не принимает. В ответ выдает ClevelandDataSet:
+```json
+{
+  "dataSetType": "Cleveland",
+  "age": 0,
+  "sex": true,
+  "chestPainType": 0,
+  "restingBloodPressure": 0,
+  "serumCholestoral": 0,
+  "fastingBloodSugar": true,
+  "restingElectrocardiographicResults": 0,
+  "maximumHeartRateAchieved": 0,
+  "exerciseInducedAngina": true,
+  "stDepression": 0,
+  "stSlope": 0,
+  "numberOfMajorvessels": 0,
+  "thalassemia": 0
+}
+```
+3) /ping: Служит для проверки наличия связи. В данный момент бесполезен. На вход ничего не получает. В ответ всегда отвечает "Pong".
+
 ## Используемые датасеты:
 1) https://www.kaggle.com/fedesoriano/heart-failure-prediction
 2) https://www.kaggle.com/andrewmvd/heart-failure-clinical-data
