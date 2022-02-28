@@ -62,6 +62,7 @@ namespace Get_Requests_From_Client_For_Project_Test
                 string xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
             });
+
         }
 
         /// <summary>

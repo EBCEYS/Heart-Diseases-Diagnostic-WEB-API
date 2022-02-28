@@ -12,6 +12,10 @@
 	<PlatformTarget>x64</PlatformTarget>
 	<DebugType>portable</DebugType>
 	<SignAssembly>False</SignAssembly>
+	<Version>0.1.1</Version>
+	<Description>WEB API to diagnose heart diseases.</Description>
+	<Authors>Kuznetsov Alexey, Konkov Vladislav</Authors>
+	<Company>Kuznetsov Alexey, Konkov Vladislav</Company>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -19,10 +23,15 @@
 	<NoWarn>$(NoWarn);1591</NoWarn>
     <DocumentationFile>D:\Project for conference\Get_Requests_From_Client_For_Project_Test\Get_Requests_From_Client_For_Project_Test.xml</DocumentationFile>
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <WarningLevel>0</WarningLevel>
+    <GenerateSerializationAssemblies>off</GenerateSerializationAssemblies>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+	<DocumentationFile>D:\Project for conference\Get_Requests_From_Client_For_Project_Test\Get_Requests_From_Client_For_Project_Test.xml</DocumentationFile>
+	<WarningLevel>0</WarningLevel>
+	<GenerateSerializationAssemblies>off</GenerateSerializationAssemblies>
   </PropertyGroup>
 
   <ItemGroup>

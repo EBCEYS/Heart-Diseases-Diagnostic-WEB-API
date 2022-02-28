@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using NLog;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json;
 
@@ -57,15 +58,14 @@ namespace Get_Requests_From_Client_For_Project_Test.Controllers
         /// <param name="algorithm">The AI algorithm.</param>
         /// <param name="dataSetType">The data set type.</param>
         /// <param name="data">The values set by dataset example.</param>
-        /// <param name="requestId">The request id. <example>"6c6135c2-6c5c-460d-81c8-35316d0144dd"</example></param>
+        /// <param name="requestId">The request id. Request id example: <example>6c6135c2-6c5c-460d-81c8-35316d0144dd</example></param>
         /// <returns>The action response.</returns>
         [ProducesResponseType(typeof(ActionResponse), 200)]
         [HttpPost("/diagnose")]
         public ActionResult<ActionResponse> Diagnose([Required][FromQuery] AlgorithmsTypes algorithm, [Required][FromQuery] DataSetTypes dataSetType, [FromBody] JsonDocument data, [Required][FromHeader] string requestId)
         {
-            logger.Info("public ActionResult<ActionResponse> Get([Required][FromQuery] string {@algorithm}, [Required][FromBody] ClevelandDataSet {@dataSet})", algorithm, data.RootElement.ToString());
+            logger.Info("public ActionResult<ActionResponse> Diagnose([Required][FromQuery] AlgorithmsTypes {algorithm}, [Required][FromQuery] DataSetTypes {dataSetType}, [FromBody] JsonDocument {@data}, [Required][FromHeader] string {requestId})", algorithm, dataSetType, data.RootElement.ToString(), requestId);
             string dataSet = data.RootElement.ToString();
-            //TODO: сделать проверку на соответствие формату или вообще убрать RequestId
             requestId = requestId.Length == _RequestIdLength ? requestId : null;
             ActionResponse response;
             if (requestId == null)
@@ -80,8 +80,16 @@ namespace Get_Requests_From_Client_For_Project_Test.Controllers
                 {
                     case DataSetTypes.Cleveland:
                         ClevelandDataSet clevelandDataSet = JsonSerializer.Deserialize<ClevelandDataSet>(dataSet, new() { WriteIndented = false, AllowTrailingCommas = true, PropertyNameCaseInsensitive = true });
-                        response = _server.RequestToCalc<ActionResponse, ClevelandDataSet>(algorithm.ToString(), clevelandDataSet);
-                        if (response != null)
+                        if (clevelandDataSet.CheckAttributes(out List<string> nullVals))
+                        {
+                            response = _server.RequestToCalc<ActionResponse, ClevelandDataSet>(algorithm.ToString(), clevelandDataSet);
+                        }
+                        else
+                        {
+                            logger.Debug("Null values list: {@nullVals}", nullVals);
+                            response = new() { Answer = Result.ERROR_WRONG_DATASET, RequestId = requestId, Value = null };
+                        }
+                        if (response != null && !String.IsNullOrEmpty(response.RequestId))
                         {
                             response.RequestId = requestId;
                         }
@@ -91,9 +99,9 @@ namespace Get_Requests_From_Client_For_Project_Test.Controllers
                         break;
                 }
             }
-            catch (Exception ex)
+            catch (JsonException ex)
             {
-                logger.Error(ex, "Error on sending RPC request", ex.Message);
+                logger.Error(ex, "Parsing error", ex.Message);
                 response = null;
             }
             if (response == null)
@@ -124,7 +132,7 @@ namespace Get_Requests_From_Client_For_Project_Test.Controllers
         [HttpGet("/cleveland-example")]
         public ActionResult<ClevelandDataSet> GetClevelandExample()
         {
-            logger.Debug("public ActionResult GetClevelandExample()");
+            logger.Info("public ActionResult GetClevelandExample()");
             ClevelandDataSet example = new()
             {
                 Age = 63,
@@ -134,6 +142,7 @@ namespace Get_Requests_From_Client_For_Project_Test.Controllers
                 SerumCholestoral = 233,
                 FastingBloodSugar = false,
                 MaximumHeartRateAchieved = 150,
+                RestingElectrocardiographicResults = 1,
                 ExerciseInducedAngina = false,
                 STDepression = 2.3,
                 STSlope = 0,
