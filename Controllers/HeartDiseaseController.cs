@@ -71,9 +71,8 @@ namespace Get_Requests_From_Client_For_Project_Test.Controllers
             if (requestId == null)
             {
                 response = new() { Answer = Result.ERROR_WRONG_REQUEST_ID };
-                return Ok(response.ToObject());
+                return Ok(response);
             }
-            logger.Debug("Body is: {@ds}", dataSet);
             try
             {
                 switch (dataSetType)
@@ -83,15 +82,16 @@ namespace Get_Requests_From_Client_For_Project_Test.Controllers
                         if (clevelandDataSet.CheckAttributes(out List<string> nullVals))
                         {
                             response = _server.RequestToCalc<ActionResponse, ClevelandDataSet>(algorithm.ToString(), clevelandDataSet);
+                            if (response != null)
+                            {
+                                response.RequestId = requestId;
+                            }
                         }
                         else
                         {
                             logger.Debug("Null values list: {@nullVals}", nullVals);
                             response = new() { Answer = Result.ERROR_WRONG_DATASET, RequestId = requestId, Value = null };
-                        }
-                        if (response != null && !String.IsNullOrEmpty(response.RequestId))
-                        {
-                            response.RequestId = requestId;
+                            break;
                         }
                         break;
                     default:

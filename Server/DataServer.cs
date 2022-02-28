@@ -10,6 +10,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -68,7 +70,7 @@ namespace Get_Requests_From_Client_For_Project_Test
             logger.Debug("Current list of allowed machines employment: {@_listAllowedMachinesEmployment}", _listAllowedMachinesEmployment);
             string leastBusyMachineIp = _listAllowedMachinesEmployment.GetLeastBusyMachine().Key;
             _listAllowedMachinesEmployment[leastBusyMachineIp]++;
-            T answer = PostRPCRequest<T, D>(leastBusyMachineIp, algorithm, data).Result;
+            T answer = PostRPCRequest<T, D>(leastBusyMachineIp, "AI", algorithm, data).Result;
             _listAllowedMachinesEmployment[leastBusyMachineIp]--;
             return answer;
         }
@@ -81,17 +83,28 @@ namespace Get_Requests_From_Client_For_Project_Test
         /// <param name="url">The url.</param>
         /// <param name="algorithm">The algorithm.</param>
         /// <param name="data">The data.</param>
+        /// <param name="route">The rpc route.</param>
         /// <returns>Deserialized RPC response.</returns>
-        private async Task<T> PostRPCRequest<T, D>(string url, string algorithm, D data)
+        private async Task<T> PostRPCRequest<T, D>(string url, string route, string algorithm, D data)
         {
             try
             {
                 logger.Info("private async Task<T> PostRPCRequest<T, D>(string {url}, string {algorithm}, object {@data})", url, algorithm, data);
                 UriBuilder builder = new(url);
-                RpcClient client = new(builder.Uri);
+
+                //ЧЕРТОВ КОСТЫЛЬ!
+                Newtonsoft.Json.JsonSerializerSettings jsonSerializerSettings = new()
+                {
+                    ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver(),
+                    NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore,
+                    ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore,
+                };
+                jsonSerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+                //Подумать как этого избежать и использовать microsoft json
+                RpcClient client = new(builder.Uri, new DefaultRequestJsonSerializer(jsonSerializerSettings: jsonSerializerSettings));
                 RpcRequest request = new(Guid.NewGuid().ToString(), algorithm, RpcParameters.From(data));
                 logger.Info("Rpc request to url {url} with params: {@params}", client.BaseUrl, request);
-                RpcResponse response = await client.SendRequestAsync(request, null, typeof(T));
+                RpcResponse response = await client.SendRequestAsync(request, route, typeof(T));
                 logger.Info("Answer is {@response}", response);
                 if (!response.HasError)
                 {
