@@ -31,14 +31,6 @@ namespace Get_Requests_From_Client_For_Project_Test.DataSetsClasses
             this.dataSetType = dataSetType;
         }
         /// <summary>
-        /// Method uses to convert DataSet class to object type.
-        /// </summary>
-        /// <returns>The object.</returns>
-        internal object ToObject()
-        {
-            return (object)this;
-        }
-        /// <summary>
         /// Method checks for attributes were not null.
         /// </summary>
         /// <param name="nullProps">The out list of properties with null value.</param>
