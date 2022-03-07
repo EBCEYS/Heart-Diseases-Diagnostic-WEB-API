@@ -33,7 +33,6 @@ WEB API для диагностирования сердечно-сосудис�
 2) /cleveland-example: Отвечает примером класса ClevelandDataSet.На вход ничего не принимает. В ответ выдает ClevelandDataSet:
 ```json
 {
-  "dataSetType": "Cleveland",
   "age": 0,
   "sex": true,
   "chestPainType": 0,

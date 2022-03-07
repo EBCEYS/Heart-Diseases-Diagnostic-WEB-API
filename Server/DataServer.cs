@@ -69,10 +69,14 @@ namespace Get_Requests_From_Client_For_Project_Test
             logger.Info("T RequestToCalc<T, D>(string {algorithm}, object {@data}", algorithm, data);
             logger.Debug("Current list of allowed machines employment: {@_listAllowedMachinesEmployment}", _listAllowedMachinesEmployment);
             string leastBusyMachineIp = _listAllowedMachinesEmployment.GetLeastBusyMachine().Key;
-            _listAllowedMachinesEmployment[leastBusyMachineIp]++;
-            T answer = PostRPCRequest<T, D>(leastBusyMachineIp, "AI", algorithm, data).Result;
-            _listAllowedMachinesEmployment[leastBusyMachineIp]--;
-            return answer;
+            if (!String.IsNullOrEmpty(leastBusyMachineIp))
+            {
+                _listAllowedMachinesEmployment[leastBusyMachineIp]++;
+                T answer = PostRPCRequest<T, D>(leastBusyMachineIp, "AI", algorithm, data).Result;
+                _listAllowedMachinesEmployment[leastBusyMachineIp]--;
+                return answer;
+            }
+            return default;
         }
 
         /// <summary>

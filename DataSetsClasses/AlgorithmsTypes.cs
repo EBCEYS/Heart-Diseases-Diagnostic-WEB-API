@@ -8,7 +8,7 @@
         /// <summary>
         /// The lstm algorithm.
         /// </summary>
-        LSTM,
+        SVM,
         /// <summary>
         /// The bilstm algorithm.
         /// </summary>
