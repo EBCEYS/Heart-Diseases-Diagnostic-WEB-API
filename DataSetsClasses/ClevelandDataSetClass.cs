@@ -18,7 +18,7 @@
         /// <value>
         /// The sex. If male <c>true</c>; otherwise <c>false</c>.
         /// </value>
-        public bool? Sex { get; set; }
+        public int? Sex { get; set; }
         /// <summary>
         /// Gets or sets the chest pain type.
         /// </summary>

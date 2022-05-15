@@ -6,15 +6,19 @@
     public enum AlgorithmsTypes
     {
         /// <summary>
-        /// The lstm algorithm.
+        /// The random forest.
+        /// </summary>
+        RandomForest,
+        /// <summary>
+        /// The SVM.
         /// </summary>
         SVM,
         /// <summary>
-        /// The bilstm algorithm.
+        /// The BILSTM.
         /// </summary>
         BILSTM,
         /// <summary>
-        /// The naive bayes algorithm.
+        /// The NaiveBayes.
         /// </summary>
         NAIVEBAYES
     }
