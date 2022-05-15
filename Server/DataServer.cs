@@ -45,6 +45,15 @@ namespace Get_Requests_From_Client_For_Project_Test
                 ));
         }
 
+        JsonSerializerOptions jsonSerializerOptions = new()
+        {
+            Converters = { new JsonStringEnumConverter() },
+            WriteIndented = false,
+            ReadCommentHandling = JsonCommentHandling.Skip,
+            AllowTrailingCommas = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        };
+
         private readonly Logger logger;
         private readonly IConfiguration config;
 
@@ -64,7 +73,7 @@ namespace Get_Requests_From_Client_For_Project_Test
         /// <param name="algorithm">The AI algorithm.</param>
         /// <param name="data">The data.</param>
         /// <returns>ActionResultReponse</returns>
-        public T RequestToCalc<T, D>(string algorithm, D data)
+        public ActionResponse RequestToCalc<T>(string algorithm, object data)
         {
             logger.Info("T RequestToCalc<T, D>(string {algorithm}, object {@data}", algorithm, data);
             logger.Debug("Current list of allowed machines employment: {@_listAllowedMachinesEmployment}", _listAllowedMachinesEmployment);
@@ -72,9 +81,17 @@ namespace Get_Requests_From_Client_For_Project_Test
             if (!String.IsNullOrEmpty(leastBusyMachineIp))
             {
                 _listAllowedMachinesEmployment[leastBusyMachineIp]++;
-                T answer = PostRPCRequest<T, D>(leastBusyMachineIp, "AI", algorithm, data).Result;
+                (bool exec, bool res, string obj) = HttpRequest(leastBusyMachineIp, algorithm, HttpRequestType.Post, data).Result;
                 _listAllowedMachinesEmployment[leastBusyMachineIp]--;
-                return answer;
+                if (exec && res && !String.IsNullOrEmpty(obj))
+                    return JsonSerializer.Deserialize<ActionResponse>(obj, jsonSerializerOptions);
+                else
+                {
+                    return new ActionResponse()
+                    {
+                        Answer = Result.ERROR
+                    };
+                }
             }
             return default;
         }
@@ -190,10 +207,11 @@ namespace Get_Requests_From_Client_For_Project_Test
         /// <param name="json">The json to body. Uses only with post request type.</param>
         /// <param name="requestType">The request type.</param>
         /// <returns>exec - <c>true</c> if executed; otherwise <c>false</c>| <c>true</c> if http response has 200 status code; otherwise <c> false</c></returns>
-        public async Task<(bool exec, bool res, string obj)> HttpRequest(string url, string method, HttpRequestType requestType, string json = null)
+        public async Task<(bool exec, bool res, string obj)> HttpRequest(string url, string method, HttpRequestType requestType, object data = null)
         {
             try
             {
+                string json = JsonSerializer.Serialize(data, jsonSerializerOptions);
                 UriBuilder builder = new($"{url}/{method}");
                 using HttpClientHandler handler = new();
                 using HttpClient httpClient = new(handler);

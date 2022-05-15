@@ -61,8 +61,8 @@ namespace Get_Requests_From_Client_For_Project_Test.Controllers
         /// <param name="requestId">The request id. Request id example: <example>6c6135c2-6c5c-460d-81c8-35316d0144dd</example></param>
         /// <returns>The action response.</returns>
         [ProducesResponseType(typeof(ActionResponse), 200)]
-        [HttpPost("/diagnose")]
-        public ActionResult<ActionResponse> Diagnose([Required][FromQuery] AlgorithmsTypes algorithm, [Required][FromQuery] DataSetTypes dataSetType, [FromBody] JsonDocument data, [Required][FromHeader] string requestId)
+        [HttpPost("{algorithm}/{dataSetType}/diagnose")]
+        public ActionResult<ActionResponse> Diagnose([Required][FromRoute] AlgorithmsTypes algorithm, [Required][FromRoute] DataSetTypes dataSetType, [FromBody] JsonDocument data, [Required][FromHeader] string requestId)
         {
             logger.Info("public ActionResult<ActionResponse> Diagnose([Required][FromQuery] AlgorithmsTypes {algorithm}, [Required][FromQuery] DataSetTypes {dataSetType}, [FromBody] JsonDocument {@data}, [Required][FromHeader] string {requestId})", algorithm, dataSetType, data.RootElement.ToString(), requestId);
             string dataSet = data.RootElement.ToString();
@@ -81,7 +81,7 @@ namespace Get_Requests_From_Client_For_Project_Test.Controllers
                         ClevelandDataSet clevelandDataSet = JsonSerializer.Deserialize<ClevelandDataSet>(dataSet, new() { WriteIndented = false, AllowTrailingCommas = true, PropertyNameCaseInsensitive = true });
                         if (clevelandDataSet.CheckAttributes(out List<string> nullVals))
                         {
-                            response = _server.RequestToCalc<ActionResponse, ClevelandDataSet>(algorithm.ToString(), clevelandDataSet);
+                            response = _server.RequestToCalc<ActionResponse>(algorithm.ToString(), clevelandDataSet);
                             if (response != null)
                             {
                                 response.RequestId = requestId;
@@ -136,7 +136,7 @@ namespace Get_Requests_From_Client_For_Project_Test.Controllers
             ClevelandDataSet example = new()
             {
                 Age = 63,
-                Sex = true,
+                Sex = 1,
                 ChestPainType = 3,
                 RestingBloodPressure = 145,
                 SerumCholestoral = 233,
