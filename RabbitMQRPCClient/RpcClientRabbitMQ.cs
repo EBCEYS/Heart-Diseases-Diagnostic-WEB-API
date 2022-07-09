@@ -1,7 +1,14 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading;
+using System.Threading.Tasks;
+using Get_Requests_From_Client_For_Project_Test.DataSetsClasses;
+using Get_Requests_From_Client_For_Project_Test.Reponse;
 using Get_Requests_From_Client_For_Project_Test.Server;
+using NLog;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -13,31 +20,32 @@ namespace Get_Requests_From_Client_For_Project_Test.RabbitMQRPCClient
         private readonly IModel channel;
         private readonly string replyQueueName;
         private readonly EventingBasicConsumer consumer;
-        private readonly BlockingCollection<string> respQueue = new();
+        private readonly ConcurrentDictionary<string, BaseResponse> respDitct= new();
+        private readonly ConcurrentDictionary<string, BaseRequest> reqDict = new();
         private readonly IBasicProperties props;
         private readonly RabbitMQSettings _rabbitMQSettings;
+        private readonly Logger logger;
 
-        public RpcClientRabbitMQ(RabbitMQSettings _rabbitMQSettings)
+        private readonly JsonSerializerOptions jsonSerializerOptions = new()
         {
+            Converters = { new JsonStringEnumConverter() },
+            WriteIndented = false,
+            ReadCommentHandling = JsonCommentHandling.Skip,
+            AllowTrailingCommas = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        };
+
+        public RpcClientRabbitMQ(RabbitMQSettings _rabbitMQSettings, Logger logger)
+        {
+            this.logger = logger;
             this._rabbitMQSettings = _rabbitMQSettings;
-            ConnectionFactory factory = new() 
-            { 
-                HostName = _rabbitMQSettings.HostName, 
+            ConnectionFactory factory = new()
+            {
+                HostName = _rabbitMQSettings.HostName,
                 Port = _rabbitMQSettings.Port,
                 UserName = _rabbitMQSettings.UserName,
                 Password = _rabbitMQSettings.Password
             };
-            /*ConnectionFactory factory = new()
-            {
-                Uri = new Uri("amqp://guest:guest@localhost:55006/")
-            };*/
-            /*ConnectionFactory factory = new()
-            {
-                HostName = "localhost",
-                UserName = ConnectionFactory.DefaultUser,
-                Password = ConnectionFactory.DefaultPass,
-                Port = AmqpTcpEndpoint.UseDefaultPort
-            };*/
 
             connection = factory.CreateConnection();
             channel = connection.CreateModel();
@@ -49,13 +57,26 @@ namespace Get_Requests_From_Client_For_Project_Test.RabbitMQRPCClient
             props.CorrelationId = correlationId;
             props.ReplyTo = replyQueueName;
 
+            channel.QueueDeclare(queue: _rabbitMQSettings.Queue, durable: false,
+              exclusive: false, autoDelete: false, arguments: null);
+
             consumer.Received += (model, ea) =>
             {
                 byte[] body = ea.Body.ToArray();
-                string response = Encoding.UTF8.GetString(body);
-                if (ea.BasicProperties.CorrelationId == correlationId)
+                string encodedMessage = Encoding.UTF8.GetString(body);
+                BaseResponse response = null;
+                try
                 {
-                    respQueue.Add(response);
+                    response = JsonSerializer.Deserialize<BaseResponse>(encodedMessage, jsonSerializerOptions);
+                }
+                catch (Exception ex)
+                {
+                    this.logger.Error(ex, $"Error on parsing encoded message!{Environment.NewLine}{encodedMessage}", ex.Message);
+                }
+                if (reqDict.TryGetValue(response.Id, out BaseRequest request) && ea.BasicProperties.CorrelationId == correlationId)
+                {
+                    respDitct.TryAdd(response.Id, response);
+                    request.Ev.Set();
                 }
             };
 
@@ -65,16 +86,20 @@ namespace Get_Requests_From_Client_For_Project_Test.RabbitMQRPCClient
                 autoAck: true);
         }
 
-        public string Call(string message)
+        public ActionResponse Call(BaseRequest data)
         {
+            string message = JsonSerializer.Serialize(data, jsonSerializerOptions);
+            reqDict.TryAdd(data.Id, data);
             byte[] messageBytes = Encoding.UTF8.GetBytes(message);
+            data.Ev = new(false);
             channel.BasicPublish(
                 exchange: "",
                 routingKey: _rabbitMQSettings.Queue,
                 basicProperties: props,
                 body: messageBytes);
-
-            return respQueue.Take();
+            data.Ev.WaitOne(TimeSpan.FromSeconds(_rabbitMQSettings.Timeout));
+            respDitct.TryRemove(data.Id, out BaseResponse result);
+            return result?.Result ?? null;
         }
 
         public void Close()
