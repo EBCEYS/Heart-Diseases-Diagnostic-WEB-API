@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog;
 using NLog.Web;
+using System;
 using System.Diagnostics;
 using System.IO;
 
@@ -57,8 +58,10 @@ namespace Get_Requests_From_Client_For_Project_Test
 
         private static string GetBasePath()
         {
+            /*
             using ProcessModule processModule = Process.GetCurrentProcess().MainModule;
-            return Path.GetDirectoryName(processModule?.FileName);
+            return Path.GetDirectoryName(processModule?.FileName);*/
+            return AppDomain.CurrentDomain.BaseDirectory;
         }
     }
 }

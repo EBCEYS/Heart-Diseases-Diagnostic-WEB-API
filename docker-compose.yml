@@ -1,0 +1,14 @@
+version: '3.4'
+services:
+  get_requests_from_client_for_project_test:
+    image: ${DOCKER_REGISTRY-}getrequestsfromclientforprojecttest
+    container_name: 'restserver'
+    build:
+      context: .
+      dockerfile: Dockerfile
+  rabbitmq:
+    image: rabbitmq:3.8-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+        - 5673:5672
+        - 15673:15672

@@ -78,10 +78,11 @@ namespace Get_Requests_From_Client_For_Project_Test.Controllers
                 switch (dataSetType)
                 {
                     case DataSetTypes.Cleveland:
-                        ClevelandDataSet clevelandDataSet = JsonSerializer.Deserialize<ClevelandDataSet>(dataSet, new() { WriteIndented = false, AllowTrailingCommas = true, PropertyNameCaseInsensitive = true });
+                        ClevelandDataSet clevelandDataSet = JsonSerializer.Deserialize<ClevelandDataSet>(dataSet,
+                                                                                                         new JsonSerializerOptions() { WriteIndented = false, AllowTrailingCommas = true, PropertyNameCaseInsensitive = true });
                         if (clevelandDataSet.CheckAttributes(out List<string> nullVals))
                         {
-                            response = _server.RequestToCalc<ActionResponse>(algorithm.ToString(), clevelandDataSet);
+                            response = _server.RequestToCalc(algorithm.ToString(), clevelandDataSet);
                             if (response != null)
                             {
                                 response.RequestId = requestId;

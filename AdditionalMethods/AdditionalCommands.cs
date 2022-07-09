@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace Get_Requests_From_Client_For_Project_Test.AdditionalMethods
@@ -26,5 +27,29 @@ namespace Get_Requests_From_Client_For_Project_Test.AdditionalMethods
             }
             return answer;
         }
+
+        /// <summary>
+        /// Converts to.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data">The data.</param>
+        /// <returns></returns>
+        public static T ConvertTo<T>(this object data)
+        {
+            try
+            {
+                if (data == null)
+                {
+                    return default;
+                }
+
+                return (T)Convert.ChangeType(data, typeof(T));
+            }
+            catch
+            {
+                return default;
+            }
+        }
+
     }
 }
