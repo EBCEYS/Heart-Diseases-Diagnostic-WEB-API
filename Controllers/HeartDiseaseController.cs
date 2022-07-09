@@ -86,7 +86,8 @@ namespace Get_Requests_From_Client_For_Project_Test.Controllers
                         {
                             BaseRequest request = new()
                             {
-                                Params = clevelandDataSet
+                                Params = clevelandDataSet,
+                                Method = algorithm.ToString()
                             };
                             response = _server.RequestToCalc(algorithm.ToString(), request);
                             if (response != null)
