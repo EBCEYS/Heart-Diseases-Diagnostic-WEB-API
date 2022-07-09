@@ -43,13 +43,10 @@ namespace Get_Requests_From_Client_For_Project_Test.Controllers
             this.config = config;
             this._server = dataServer;
 
-            _RequestIdLength = Guid.NewGuid().ToString().Length;
         }
         private readonly Logger logger;
         private readonly IConfiguration config;
         private readonly DataServer _server;
-
-        private readonly long _RequestIdLength;
 
 
         /// <summary>
@@ -58,7 +55,7 @@ namespace Get_Requests_From_Client_For_Project_Test.Controllers
         /// <param name="algorithm">The AI algorithm.</param>
         /// <param name="dataSetType">The data set type.</param>
         /// <param name="data">The values set by dataset example.</param>
-        /// <param name="requestId">The request id. Request id example: <example>6c6135c2-6c5c-460d-81c8-35316d0144dd</example></param>
+        /// <param name="requestId">The request id.</param>
         /// <returns>The action response.</returns>
         [ProducesResponseType(typeof(ActionResponse), 200)]
         [HttpPost("{algorithm}/{dataSetType}/diagnose")]
@@ -66,7 +63,6 @@ namespace Get_Requests_From_Client_For_Project_Test.Controllers
         {
             logger.Info("public ActionResult<ActionResponse> Diagnose([Required][FromQuery] AlgorithmsTypes {algorithm}, [Required][FromQuery] DataSetTypes {dataSetType}, [FromBody] JsonDocument {@data}, [Required][FromHeader] string {requestId})", algorithm, dataSetType, data.RootElement.ToString(), requestId);
             string dataSet = data.RootElement.ToString();
-            requestId = requestId.Length == _RequestIdLength ? requestId : null;
             ActionResponse response;
             if (requestId == null)
             {
@@ -78,11 +74,21 @@ namespace Get_Requests_From_Client_For_Project_Test.Controllers
                 switch (dataSetType)
                 {
                     case DataSetTypes.Cleveland:
-                        ClevelandDataSet clevelandDataSet = JsonSerializer.Deserialize<ClevelandDataSet>(dataSet,
-                                                                                                         new JsonSerializerOptions() { WriteIndented = false, AllowTrailingCommas = true, PropertyNameCaseInsensitive = true });
+                        ClevelandDataSet clevelandDataSet = JsonSerializer.Deserialize<ClevelandDataSet>
+                            (dataSet,
+                            new JsonSerializerOptions() 
+                            { 
+                                WriteIndented = false, 
+                                AllowTrailingCommas = true, 
+                                PropertyNameCaseInsensitive = true 
+                            });
                         if (clevelandDataSet.CheckAttributes(out List<string> nullVals))
                         {
-                            response = _server.RequestToCalc(algorithm.ToString(), clevelandDataSet);
+                            BaseRequest request = new()
+                            {
+                                Params = clevelandDataSet
+                            };
+                            response = _server.RequestToCalc(algorithm.ToString(), request);
                             if (response != null)
                             {
                                 response.RequestId = requestId;
@@ -90,7 +96,7 @@ namespace Get_Requests_From_Client_For_Project_Test.Controllers
                         }
                         else
                         {
-                            logger.Debug("Null values list: {@nullVals}", nullVals);
+                            logger.Error("Null values list: {@nullVals}", nullVals);
                             response = new() { Answer = Result.ERROR_WRONG_DATASET, RequestId = requestId, Value = null };
                             break;
                         }

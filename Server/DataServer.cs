@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using RabbitMQ.Client;
 using Get_Requests_From_Client_For_Project_Test.Server;
 using Get_Requests_From_Client_For_Project_Test.RabbitMQRPCClient;
+using Get_Requests_From_Client_For_Project_Test.DataSetsClasses;
 
 namespace Get_Requests_From_Client_For_Project_Test
 {
@@ -55,7 +56,7 @@ namespace Get_Requests_From_Client_For_Project_Test
             else
             {
                 logger.Info("Starts with RabbitMQ configuration: {@rabbitMQsettings}", _rabbitMQSettings);
-                _rpcClient = new(_rabbitMQSettings);
+                _rpcClient = new(_rabbitMQSettings, this.logger);
             }
         }
 
@@ -112,7 +113,7 @@ namespace Get_Requests_From_Client_For_Project_Test
             return default;
         }
 
-        public ActionResponse RequestToCalc(string algorithm, object data)
+        public ActionResponse RequestToCalc(string algorithm, BaseRequest data)
         {
             if (_isRabbitMQ)
             {
@@ -124,16 +125,15 @@ namespace Get_Requests_From_Client_For_Project_Test
             }
         }
 
-        public ActionResponse RabbitRequestToCalc(string algorithm, object data)
+        public ActionResponse RabbitRequestToCalc(string algorithm, BaseRequest data)
         {
             try
             {
                 logger.Info("Request by rabbitMQ {alg} with data {@data}", algorithm, data);
-                string json = JsonSerializer.Serialize(data, jsonSerializerOptions);
-                string result = _rpcClient.Call(json);
-                if (!string.IsNullOrEmpty(result))
+                ActionResponse result = _rpcClient.Call(data);
+                if (result != null)
                 {
-                    return JsonSerializer.Deserialize<ActionResponse>(result, jsonSerializerOptions);
+                    return result;
                 }
                 else
                 {
