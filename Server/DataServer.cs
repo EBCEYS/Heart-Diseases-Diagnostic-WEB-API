@@ -14,6 +14,9 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using RabbitMQ.Client;
+using Get_Requests_From_Client_For_Project_Test.Server;
+using Get_Requests_From_Client_For_Project_Test.RabbitMQRPCClient;
 
 namespace Get_Requests_From_Client_For_Project_Test
 {
@@ -31,21 +34,32 @@ namespace Get_Requests_From_Client_For_Project_Test
         {
             this.logger = logger;
             this.config = config;
-            _allowedIPs = new();
-            _listAllowedMachines = new();
-            _listAllowedMachinesEmployment = new();
-            UpdateAllowedIps();
 
-            _timer = new(UpdateListAllowedMachines);
-            _timer.Change(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds
-                (
-                String.IsNullOrEmpty(config["CheckAllowedLocalMachinesPeriod"].ToString())? 
-                    30: 
-                    int.Parse(config["CheckAllowedLocalMachinesPeriod"].ToString())
-                ));
+            _isRabbitMQ = config["UseRabbitMQ"].ConvertTo<bool>();
+            _rabbitMQSettings = this.config.GetSection("RabbitMQSettings").Get<RabbitMQSettings>();
+
+            if (!_isRabbitMQ)
+            {
+                _allowedIPs = new();
+                _listAllowedMachines = new();
+                _listAllowedMachinesEmployment = new();
+                UpdateAllowedIps();
+                _timer = new(UpdateListAllowedMachines);
+                _timer.Change(TimeSpan.FromSeconds(0), TimeSpan.FromSeconds
+                    (
+                    string.IsNullOrEmpty(config["CheckAllowedLocalMachinesPeriod"].ToString()) ?
+                        30 :
+                        int.Parse(config["CheckAllowedLocalMachinesPeriod"].ToString())
+                    ));
+            }
+            else
+            {
+                logger.Info("Starts with RabbitMQ configuration: {@rabbitMQsettings}", _rabbitMQSettings);
+                _rpcClient = new(_rabbitMQSettings);
+            }
         }
 
-        JsonSerializerOptions jsonSerializerOptions = new()
+        private readonly JsonSerializerOptions jsonSerializerOptions = new()
         {
             Converters = { new JsonStringEnumConverter() },
             WriteIndented = false,
@@ -59,6 +73,10 @@ namespace Get_Requests_From_Client_For_Project_Test
 
         private readonly Timer _timer;
 
+        private readonly bool _isRabbitMQ;
+        private readonly RabbitMQSettings _rabbitMQSettings;
+        private readonly RpcClientRabbitMQ _rpcClient;
+
         // List of allowed ips of local machines.
         private List<string> _allowedIPs;
         //Dictionary to see connected local machines.
@@ -68,12 +86,10 @@ namespace Get_Requests_From_Client_For_Project_Test
         /// <summary>
         /// Method uses to post request to least busy local machine.
         /// </summary>
-        /// <typeparam name="T">The response data type.</typeparam>
-        /// <typeparam name="D">The request data type.</typeparam>
         /// <param name="algorithm">The AI algorithm.</param>
         /// <param name="data">The data.</param>
         /// <returns>ActionResultReponse</returns>
-        public ActionResponse RequestToCalc<T>(string algorithm, object data)
+        public ActionResponse HttpRequestToCalc(string algorithm, object data)
         {
             logger.Info("T RequestToCalc<T, D>(string {algorithm}, object {@data}", algorithm, data);
             logger.Debug("Current list of allowed machines employment: {@_listAllowedMachinesEmployment}", _listAllowedMachinesEmployment);
@@ -96,6 +112,45 @@ namespace Get_Requests_From_Client_For_Project_Test
             return default;
         }
 
+        public ActionResponse RequestToCalc(string algorithm, object data)
+        {
+            if (_isRabbitMQ)
+            {
+                return RabbitRequestToCalc(algorithm, data);
+            }
+            else
+            {
+                return HttpRequestToCalc(algorithm, data);
+            }
+        }
+
+        public ActionResponse RabbitRequestToCalc(string algorithm, object data)
+        {
+            try
+            {
+                logger.Info("Request by rabbitMQ {alg} with data {@data}", algorithm, data);
+                string json = JsonSerializer.Serialize(data, jsonSerializerOptions);
+                string result = _rpcClient.Call(json);
+                if (!string.IsNullOrEmpty(result))
+                {
+                    return JsonSerializer.Deserialize<ActionResponse>(result, jsonSerializerOptions);
+                }
+                else
+                {
+                    throw new Exception("Empty request result!");
+                }
+            }
+            catch(Exception ex)
+            {
+                logger.Error(ex, "Error on posting Rpc rabbit request!", ex.Message);
+                return new ActionResponse()
+                {
+                    Answer = Result.ERROR
+                };
+            }
+        }
+
+
         /// <summary>
         /// Method uses to post RPC request to local machine.
         /// </summary>
@@ -106,6 +161,7 @@ namespace Get_Requests_From_Client_For_Project_Test
         /// <param name="data">The data.</param>
         /// <param name="route">The rpc route.</param>
         /// <returns>Deserialized RPC response.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Удалите неиспользуемые закрытые члены", Justification = "<Ожидание>")]
         private async Task<T> PostRPCRequest<T, D>(string url, string route, string algorithm, D data)
         {
             try
@@ -204,8 +260,8 @@ namespace Get_Requests_From_Client_For_Project_Test
         /// </summary>
         /// <param name="url">The url.</param>
         /// <param name="method">The method.</param>
-        /// <param name="json">The json to body. Uses only with post request type.</param>
         /// <param name="requestType">The request type.</param>
+        /// <param name="data">The data.</param>
         /// <returns>exec - <c>true</c> if executed; otherwise <c>false</c>| <c>true</c> if http response has 200 status code; otherwise <c> false</c></returns>
         public async Task<(bool exec, bool res, string obj)> HttpRequest(string url, string method, HttpRequestType requestType, object data = null)
         {

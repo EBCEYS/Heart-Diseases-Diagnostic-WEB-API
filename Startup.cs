@@ -8,6 +8,7 @@ using NLog;
 using System;
 using System.IO;
 using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
@@ -101,17 +102,12 @@ namespace Get_Requests_From_Client_For_Project_Test
                 try
                 {
                     await Task.Delay(TimeSpan.FromSeconds(3));
-                    string url = @$"http://localhost:5000/ping";
-
-                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-                    request.Method = "GET";
-
-                    WebResponse webResponse = request.GetResponse();
-                    Stream webStream = webResponse.GetResponseStream();
-                    StreamReader responseReader = new(webStream);
-                    string response = responseReader.ReadToEnd();
+                    string url = @$"http://localhost:80/ping";
+                    UriBuilder builder = new(url);
+                    using HttpClientHandler handler = new();
+                    using HttpClient httpClient = new(handler);
+                    HttpResponseMessage response = httpClient.GetAsync(url).Result;
                     logger.Debug("Start server {@data}", response);
-                    responseReader.Close();
                 }
                 catch (Exception ex)
                 {
