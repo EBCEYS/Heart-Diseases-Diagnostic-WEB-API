@@ -4,23 +4,25 @@ WEB API для диагностирования сердечно-сосудис�
 ## Описание конфигурационного файла:
 ```json
 {
-  "Logging": { //логирование
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft": "Warning",
-      "Microsoft.Hosting.Lifetime": "Information"
-    }
-  },
-  "AllowedHosts": "*",
-  "CheckAllowedLocalMachinesPeriod": 30, //период опроса доступных локальных машин из списка AllowedIPs
-  "AllowedIPs": [ //список ip адресов локальных машин через запятую
-    "127.0.0.1:5000" // пример
-  ]
+    "AllowedHosts": "*",
+  "CheckAllowedLocalMachinesPeriod": 5, //период опроса машин с ai-flask-server-ом в секундах
+  "AllowedIPs": [ //ip машин с ai-flask-server-ом. При использовании распределителя нагрузки - указать его ip.
+    "127.0.0.1:8800"
+  ],
+  "UseRabbitMQ": true, // если true, то вариант использования решения с RabbitMQ. Иначе запросы будут слаться на вышеуказанные адреса.
+  "RabbitMQSettings": { // настройки в случае использования RabbitMQ
+    "Queue": "rpc_queue", // имя очереди
+    "HostName": "rabbitmq", // адресс
+    "Port": 5672, // порт
+    "UserName": "RestServer", // имя
+    "Password": "Gizmo", // пароль
+    "Timeout": 20 // таймут ожидания ответа на запрос в секундах
+  }
 }
 ```
 
 ## HTTP методы:
-1) /diagnose: Основной метод. Служит для самого диагностирования. На вход принимает [Required][FromQuery] AlgorithmsTypes algorithm, [Required][FromQuery] DataSetTypes dataSetType, [FromBody] JsonDocument data, [Required][FromHeader] string requestId.
+1) /diagnose: Основной метод. Служит для самого диагностирования. На вход принимает [Required][FromPath] AlgorithmsTypes algorithm, [Required][FromPath] DataSetTypes dataSetType, [FromBody] JsonDocument data, [Required][FromHeader] string requestId.
     Структура data должна совпадать со структурой в примерах.
     В ответ выдает ActionResponse:
 ```json
