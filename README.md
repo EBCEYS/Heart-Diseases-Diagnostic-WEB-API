@@ -50,10 +50,42 @@ WEB API для диагностирования сердечно-сосудис�
 ```
 3) /ping: Служит для проверки наличия связи. В данный момент бесполезен. На вход ничего не получает. В ответ всегда отвечает "Pong".
 
+## Варианты использования решения
+### Вариант 1
+Используемое ПО:
+1. [Restserver](https://github.com/EBCEYS/Heart-Diseases-Diagnostic-WEB-API) (в процессе разработки);
+2. RabbitMQ;
+3. CustomLoadDistributor (в процессе разработки);
+4. [AIServer](https://github.com/EBCEYS/ai-flask-server) (в процессе разработки);
+5. DBAdapterService (в процессе разработки);
+6. PostgreSQL база данных.
+
+[First variant](https://github.com/EBCEYS/Heart-Diseases-Diagnostic-WEB-API/blob/main/ProjectScheme1.png)
+### Вариант 2
+Используемое ПО:
+1. [Restserver](https://github.com/EBCEYS/Heart-Diseases-Diagnostic-WEB-API) (в процессе разработки);
+2. CustomHTTPLoadDistributor (в процессе разработки);
+3. RabbitMQ;
+4. CustomLoadDistributor (в процессе разработки);
+5. [AIServer](https://github.com/EBCEYS/ai-flask-server) (в процессе разработки);
+6. DBAdapterService (в процессе разработки);
+7. PostgreSQL база данных.
+
+[Second variant](https://github.com/EBCEYS/Heart-Diseases-Diagnostic-WEB-API/blob/main/ProjectScheme2.png)
+### Вариант 3
+Используемое ПО:
+1. [Restserver](https://github.com/EBCEYS/Heart-Diseases-Diagnostic-WEB-API) (в процессе разработки);
+2. CustomHTTPLoadDistributor (в процессе разработки);
+3. [AIServer](https://github.com/EBCEYS/ai-flask-server) (в процессе разработки);
+
+[Third variant](https://github.com/EBCEYS/Heart-Diseases-Diagnostic-WEB-API/blob/main/ProjectScheme3.png)
+
+Описание настроек ПО для каждого варианта будет описано после завершения разработки.
+
 ## Используемые датасеты:
-1) https://www.kaggle.com/fedesoriano/heart-failure-prediction
-2) https://www.kaggle.com/andrewmvd/heart-failure-clinical-data
-3) https://www.kaggle.com/sulianova/cardiovascular-disease-dataset
-4) https://www.kaggle.com/yassinehamdaoui1/cardiovascular-disease
-5) https://www.kaggle.com/ronitf/heart-disease-uci
+1. https://www.kaggle.com/fedesoriano/heart-failure-prediction
+2. https://www.kaggle.com/andrewmvd/heart-failure-clinical-data
+3. https://www.kaggle.com/sulianova/cardiovascular-disease-dataset
+4. https://www.kaggle.com/yassinehamdaoui1/cardiovascular-disease
+5. https://www.kaggle.com/ronitf/heart-disease-uci
 
