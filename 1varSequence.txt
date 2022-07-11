@@ -1,0 +1,25 @@
+@startuml
+
+title "First variant"
+
+actor Client as client
+entity PublicWebAPI as rest
+entity RabbitMQ as rabbit
+entity CustomLoadDistributor as spliter
+entity AIServer as ai
+entity DBAdapter as dbcon
+database DB as db
+
+client -> rest : diagnose request
+rest -> rabbit : json rpc request to diagnose
+rabbit -> dbcon : message to write in database
+rabbit -> spliter : request to diagnose
+spliter -> ai : splits load to AIServers
+ai -> spliter : diagnose response
+spliter -> rabbit : diagnose response
+rabbit -> dbcon : message to write diagnose result in database
+dbcon -> db : write diagnose request with result to database
+rabbit -> rest : diagnose result
+rest -> client : diagnose result
+
+@enduml
