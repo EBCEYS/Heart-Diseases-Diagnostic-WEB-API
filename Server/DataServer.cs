@@ -1,6 +1,4 @@
-﻿using EdjCase.JsonRpc.Client;
-using EdjCase.JsonRpc.Core;
-using Get_Requests_From_Client_For_Project_Test.AdditionalMethods;
+﻿using Get_Requests_From_Client_For_Project_Test.AdditionalMethods;
 using Microsoft.Extensions.Configuration;
 using NLog;
 using System;
@@ -150,7 +148,8 @@ namespace Get_Requests_From_Client_For_Project_Test
             }
         }
 
-
+        #region old_RPC_realization
+        /*
         /// <summary>
         /// Method uses to post RPC request to local machine.
         /// </summary>
@@ -161,7 +160,6 @@ namespace Get_Requests_From_Client_For_Project_Test
         /// <param name="data">The data.</param>
         /// <param name="route">The rpc route.</param>
         /// <returns>Deserialized RPC response.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Удалите неиспользуемые закрытые члены", Justification = "<Ожидание>")]
         private async Task<T> PostRPCRequest<T, D>(string url, string route, string algorithm, D data)
         {
             try
@@ -200,7 +198,8 @@ namespace Get_Requests_From_Client_For_Project_Test
                 logger.Error(ex, "Error on sending RPC request", ex.Message);
                 return default;
             }
-        }
+        }*/
+        #endregion
 
         /// <summary>
         /// Method uses to update list of allowed local machines.

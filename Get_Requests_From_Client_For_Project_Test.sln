@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Get_Requests_From_Client_Fo
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{74C7B0C1-FEDE-4A15-85B3-BC1048FEC902}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMQToHTTPLoadBalancingService", "RabbitMQToHTTPLoadBalancingService\RabbitMQToHTTPLoadBalancingService.csproj", "{DA9DE634-9466-4859-B4F2-89A8FFBB9538}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{74C7B0C1-FEDE-4A15-85B3-BC1048FEC902}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74C7B0C1-FEDE-4A15-85B3-BC1048FEC902}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74C7B0C1-FEDE-4A15-85B3-BC1048FEC902}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA9DE634-9466-4859-B4F2-89A8FFBB9538}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA9DE634-9466-4859-B4F2-89A8FFBB9538}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA9DE634-9466-4859-B4F2-89A8FFBB9538}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA9DE634-9466-4859-B4F2-89A8FFBB9538}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
