@@ -1,13 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.2.32616.157
+VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Get_Requests_From_Client_For_Project_Test", "Get_Requests_From_Client_For_Project_Test.csproj", "{FD6F89EA-75BE-4C55-9996-69B068F91FA5}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{74C7B0C1-FEDE-4A15-85B3-BC1048FEC902}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMQToHTTPLoadBalancingService", "RabbitMQToHTTPLoadBalancingService\RabbitMQToHTTPLoadBalancingService.csproj", "{DA9DE634-9466-4859-B4F2-89A8FFBB9538}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMQToHTTPLoadBalancingService", "RabbitMQToHTTPLoadBalancingService\RabbitMQToHTTPLoadBalancingService.csproj", "{4CADBC96-27A3-4587-A3F6-FDF648F7C1A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +17,10 @@ Global
 		{FD6F89EA-75BE-4C55-9996-69B068F91FA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD6F89EA-75BE-4C55-9996-69B068F91FA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD6F89EA-75BE-4C55-9996-69B068F91FA5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{74C7B0C1-FEDE-4A15-85B3-BC1048FEC902}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{74C7B0C1-FEDE-4A15-85B3-BC1048FEC902}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{74C7B0C1-FEDE-4A15-85B3-BC1048FEC902}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{74C7B0C1-FEDE-4A15-85B3-BC1048FEC902}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DA9DE634-9466-4859-B4F2-89A8FFBB9538}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DA9DE634-9466-4859-B4F2-89A8FFBB9538}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DA9DE634-9466-4859-B4F2-89A8FFBB9538}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DA9DE634-9466-4859-B4F2-89A8FFBB9538}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CADBC96-27A3-4587-A3F6-FDF648F7C1A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CADBC96-27A3-4587-A3F6-FDF648F7C1A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CADBC96-27A3-4587-A3F6-FDF648F7C1A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CADBC96-27A3-4587-A3F6-FDF648F7C1A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
