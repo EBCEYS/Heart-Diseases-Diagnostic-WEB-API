@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json.Serialization;
 using System.Threading;
 
 namespace Get_Requests_From_Client_For_Project_Test.DataSetsClasses
@@ -7,6 +8,7 @@ namespace Get_Requests_From_Client_For_Project_Test.DataSetsClasses
     {
         public string Id { get; set; }
         public object Params { get; set; }
+        [JsonIgnore]
         public ManualResetEvent Ev { get; set; }
         public string Jsonrpc { get; set; }
         public string Method { get; set; }

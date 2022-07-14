@@ -65,6 +65,7 @@ namespace Get_Requests_From_Client_For_Project_Test.RabbitMQRPCClient
                 byte[] body = ea.Body.ToArray();
                 string encodedMessage = Encoding.UTF8.GetString(body);
                 BaseResponse response = null;
+                this.logger.Info("Get rabbit response: {encodedMessage}", encodedMessage);
                 try
                 {
                     response = JsonSerializer.Deserialize<BaseResponse>(encodedMessage, jsonSerializerOptions);
@@ -73,10 +74,18 @@ namespace Get_Requests_From_Client_For_Project_Test.RabbitMQRPCClient
                 {
                     this.logger.Error(ex, $"Error on parsing encoded message!{Environment.NewLine}{encodedMessage}", ex.Message);
                 }
-                if (reqDict.TryGetValue(response.Id, out BaseRequest request) && ea.BasicProperties.CorrelationId == correlationId)
+                finally
                 {
-                    respDitct.TryAdd(response.Id, response);
-                    request.Ev.Set();
+                    if (response != null)
+                    {
+                        if (reqDict.TryGetValue(response?.Id, out BaseRequest request) && ea.BasicProperties.CorrelationId == correlationId)
+                        {
+                            respDitct.TryAdd(response.Id, response);
+                            request.Ev.Set();
+                        }
+                    }
+                    else
+                        this.logger.Error("Response is null!");
                 }
             };
 
@@ -89,9 +98,9 @@ namespace Get_Requests_From_Client_For_Project_Test.RabbitMQRPCClient
         public ActionResponse Call(BaseRequest data)
         {
             string message = JsonSerializer.Serialize(data, jsonSerializerOptions);
+            data.Ev = new(false);
             reqDict.TryAdd(data.Id, data);
             byte[] messageBytes = Encoding.UTF8.GetBytes(message);
-            data.Ev = new(false);
             channel.BasicPublish(
                 exchange: "",
                 routingKey: _rabbitMQSettings.Queue,
