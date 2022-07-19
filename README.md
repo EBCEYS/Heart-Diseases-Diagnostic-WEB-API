@@ -66,21 +66,9 @@ WEB API для диагностирования сердечно-сосудис�
 ### Вариант 2
 Используемое ПО:
 1. [Restserver](https://github.com/EBCEYS/Heart-Diseases-Diagnostic-WEB-API) (в процессе разработки);
-2. CustomHTTPLoadDistributor (в процессе разработки);
-3. RabbitMQ;
-4. [RabbitMQToHTTPLoadBalancingService](https://github.com/EBCEYS/RabbitMQToHTTPLoadBalancingService) (в процессе разработки);
-5. [AIServer](https://github.com/EBCEYS/ai-flask-server) (в процессе разработки);
-6. DBAdapterService (в процессе разработки);
-7. PostgreSQL база данных.
+2. [AIServer](https://github.com/EBCEYS/ai-flask-server) (в процессе разработки);
 
 ![Second variant](https://github.com/EBCEYS/Heart-Diseases-Diagnostic-WEB-API/blob/main/ProjectScheme2.png)
-### Вариант 3
-Используемое ПО:
-1. [Restserver](https://github.com/EBCEYS/Heart-Diseases-Diagnostic-WEB-API) (в процессе разработки);
-2. CustomHTTPLoadBalancer (в процессе разработки);
-3. [AIServer](https://github.com/EBCEYS/ai-flask-server) (в процессе разработки);
-
-![Third variant](https://github.com/EBCEYS/Heart-Diseases-Diagnostic-WEB-API/blob/main/ProjectScheme3.png)
 
 Описание настроек ПО для каждого варианта будет описано после завершения разработки.
 
